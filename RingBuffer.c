@@ -17,13 +17,15 @@ RingBuffer *init(int size) {
 	}
 
 	// initialize data as 0
-	int arr[size];
-	for (i = 0; i < size; i++) 
+	int *arr;
+	arr = (int *)malloc(sizeof(int) * size);
+	for (i = 0; i < size; i++) {
 		arr[i] = 0;
+	}
 
 	b->data  = arr;
 	b->last = 0;
-	b->size  = 0;
+	b->size  = size;
 	return b;
 }
 
@@ -31,12 +33,12 @@ void enqueue(RingBuffer *b, int v) {
 	// increment
 	b->last++;
 
-	// store data
-	b->data[b->last] = v;
-
 	// wrap around
 	if (b->last == b->size) 
 		b->last = 0;
+
+	// store data
+	b->data[b->last] = v;
 }
 
 int weighted_avg(RingBuffer *b) {
@@ -53,10 +55,9 @@ int weighted_avg(RingBuffer *b) {
 
 void print_buffer(RingBuffer *b) {
 	int i;
-	printf("size: %d\n last: %d\n", b->size, b->last);
-	for (i = b->size + b->last; i > b->last; i--) {
-		printf("%d", b->data[i % b->size]);
-	}
+	for (i = b->size + b->last; i > b->last; i--)
+		printf("%d ", b->data[i % b->size]);
+	
 	printf("\n");
 }
 
